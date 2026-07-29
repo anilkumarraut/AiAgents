@@ -1,6 +1,6 @@
 "use client"
 
-import { Plus, Workflow } from "lucide-react"
+import { Plus, Workflow as WorkflowIcon } from "lucide-react"
 
 import {
   Popover,
@@ -18,26 +18,14 @@ import {
   SidebarSeparator,
   useSidebar,
 } from "@/components/ui/sidebar"
+import type { Workflow } from "@/lib/db/schema"
 
-// Placeholder until workflows are wired up to the database.
-const workflows = [
-  { id: "1", name: "dominant-wasp" },
-  { id: "2", name: "honest-reindeer" },
-  { id: "3", name: "expected-llama" },
-  { id: "4", name: "essential-ocelot" },
-  { id: "5", name: "creepy-echidna" },
-  { id: "6", name: "eastern-silkworm" },
-  { id: "7", name: "cultural-lion" },
-  { id: "8", name: "proud-weasel" },
-  { id: "9", name: "regional-bonobo" },
-]
-
-function WorkflowList() {
+function WorkflowList({ workflows }: { workflows: Workflow[] }) {
   return (
     <SidebarMenu className="gap-y-0.5">
-      {workflows.map((workflow, index) => (
+      {workflows.map((workflow) => (
         <SidebarMenuItem key={workflow.id}>
-          <SidebarMenuButton isActive={index === 0}>
+          <SidebarMenuButton>
             <span>{workflow.name}</span>
           </SidebarMenuButton>
         </SidebarMenuItem>
@@ -46,7 +34,7 @@ function WorkflowList() {
   )
 }
 
-export function WorkflowNav() {
+export function WorkflowNav({ workflows }: { workflows: Workflow[] }) {
   const { state, isMobile } = useSidebar()
 
   // On mobile the sidebar is a sheet at full width, so `state` doesn't apply.
@@ -59,7 +47,7 @@ export function WorkflowNav() {
               <Popover>
                 <PopoverTrigger asChild>
                   <SidebarMenuButton>
-                    <Workflow />
+                    <WorkflowIcon />
                     <span>Workflows</span>
                   </SidebarMenuButton>
                 </PopoverTrigger>
@@ -73,7 +61,7 @@ export function WorkflowNav() {
                     </SidebarMenuItem>
                   </SidebarMenu>
                   <SidebarSeparator />
-                  <WorkflowList />
+                  <WorkflowList workflows={workflows} />
                 </PopoverContent>
               </Popover>
             </SidebarMenuItem>
@@ -91,7 +79,7 @@ export function WorkflowNav() {
         <span className="sr-only">New workflow</span>
       </SidebarGroupAction>
       <SidebarGroupContent>
-        <WorkflowList />
+        <WorkflowList workflows={workflows} />
       </SidebarGroupContent>
     </SidebarGroup>
   )

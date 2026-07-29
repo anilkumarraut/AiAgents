@@ -1,4 +1,5 @@
 import { OrganizationSwitcher, UserButton } from "@clerk/nextjs"
+import { auth } from "@clerk/nextjs/server"
 
 import {
   Sidebar,
@@ -8,8 +9,14 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar"
 import { WorkflowNav } from "@/features/workflows/components/workflow-nav"
+import { listWorkflows } from "@/features/workflows/data"
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+export async function AppSidebar({
+  ...props
+}: React.ComponentProps<typeof Sidebar>) {
+  const { orgId } = await auth()
+  const workflows = orgId ? await listWorkflows(orgId) : []
+
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader className="flex-row items-center justify-between">
@@ -27,7 +34,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <SidebarTrigger />
       </SidebarHeader>
       <SidebarContent>
-        <WorkflowNav />
+        <WorkflowNav workflows={workflows} />
       </SidebarContent>
       <SidebarFooter className="group-data-[collapsible=icon]:items-center">
         <UserButton
