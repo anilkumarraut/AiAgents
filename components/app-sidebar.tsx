@@ -1,3 +1,4 @@
+import * as React from "react"
 import { OrganizationSwitcher, UserButton } from "@clerk/nextjs"
 import { auth } from "@clerk/nextjs/server"
 
@@ -8,6 +9,7 @@ import {
   SidebarHeader,
   SidebarTrigger,
 } from "@/components/ui/sidebar"
+import { createWorkflowAction } from "@/features/workflows/actions"
 import { WorkflowNav } from "@/features/workflows/components/workflow-nav"
 import { listWorkflows } from "@/features/workflows/data"
 
@@ -18,23 +20,24 @@ export async function AppSidebar({
   const workflows = orgId ? await listWorkflows(orgId) : []
 
   return (
-    <Sidebar collapsible="icon" {...props}>
-      <SidebarHeader className="flex-row items-center justify-between">
-        <div className="min-w-0 group-data-[collapsible=icon]:hidden">
-          <OrganizationSwitcher
-            hidePersonal
-            appearance={{
-              elements: {
-                rootBox: "min-w-0",
-                organizationSwitcherTrigger: "w-full",
-              },
-            }}
-          />
-        </div>
+    <Sidebar variant="inset" collapsible="icon" {...props}>
+      <SidebarHeader className="flex-row items-center justify-between gap-2 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:gap-0">
+        <OrganizationSwitcher
+          hidePersonal
+          appearance={{
+            elements: {
+              rootBox: "min-w-0 group-data-[collapsible=icon]:!hidden",
+              organizationSwitcherTrigger: "w-full justify-between",
+            },
+          }}
+        />
         <SidebarTrigger />
       </SidebarHeader>
       <SidebarContent>
-        <WorkflowNav workflows={workflows} />
+        <WorkflowNav
+          workflows={workflows}
+          onCreateWorkflow={createWorkflowAction}
+        />
       </SidebarContent>
       <SidebarFooter className="group-data-[collapsible=icon]:items-center">
         <UserButton
